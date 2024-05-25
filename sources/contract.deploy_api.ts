@@ -27,8 +27,12 @@ import { Voucher } from "./output/MM-NFT_Voucher";
 
         // Parameters for NFTs
         const OFFCHAIN_CONTENT_PREFIX = 0x01;
-        const string_first = "https://ipfs.io/ipfs/QmRmiALqS1mPhZLmH9mpXfd4j73jpa7kSLPqVPKByySuwY/1.json"; // Change to the content URL you prepared
-        let newContent = beginCell().storeInt(OFFCHAIN_CONTENT_PREFIX, 8).storeStringRefTail(string_first).endCell();
+        const item_link = "https://ipfs.io/ipfs/QmcysCFEJrJfQ937XDcPkyXJqvifUd6jBnJJ3bd5Dz9YKC"; // Change to the content URL you prepared
+        let itemContent = beginCell().storeInt(OFFCHAIN_CONTENT_PREFIX, 8).storeStringRefTail(item_link).endCell();
+
+        const collection_link = "https://ipfs.io/ipfs/QmXUgmCAaGnVseJuza8y3baDD9JK4oexmptWPxK7VW4hpU"; // Change to the content URL you prepared
+        let collectionContent = beginCell().storeInt(OFFCHAIN_CONTENT_PREFIX, 8).storeStringRefTail(collection_link).endCell();
+
         let mnemonic = (process.env.mnemonics || "").toString();
         let keyPair = await mnemonicToPrivateKey(mnemonic.split(" "));
         let secretKey = keyPair.secretKey;
@@ -42,7 +46,7 @@ import { Voucher } from "./output/MM-NFT_Voucher";
         let uniqueNonce = BigInt(Date.now());
         console.log("Unique nonce: ", uniqueNonce);
         // Prepare the initial code and data for the contract
-        let init = await VoucherCollection.init(owner, newContent, {
+        let init = await VoucherCollection.init(owner, itemContent, collectionContent, {
             $$type: "RoyaltyParams",
             numerator: 50n, // 50n = 5%
             denominator: 1000n,

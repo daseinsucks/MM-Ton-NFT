@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: VoucherCollection
-BOC Size: 1878 bytes
+BOC Size: 1875 bytes
 
 # Types
 Total Types: 15

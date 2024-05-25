@@ -7,13 +7,15 @@ contract VoucherCollection {
     owner_address: Address;
     royalty_params: RoyaltyParams?;                      
     collection_content: Cell;   
+    collection_base: Cell;
     unique_nonce: Int;
 
-    init(owner_address: Address, collection_content: Cell, royalty_params: RoyaltyParams, unique_nonce: Int){
+    init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: Int){
         self.owner_address = owner_address;
         self.collection_content = collection_content; 
         self.royalty_params = royalty_params;
         self.unique_nonce = unique_nonce;
+        self.collection_base = collection_base;
     }
 
       receive("Mint"){
@@ -71,9 +73,8 @@ contract VoucherCollection {
     // ------------------ Get Function  ------------------ //
     get fun get_collection_data(): CollectionData {     
         let b: StringBuilder = beginString();
-        let collectionDataString: String = self.collection_content.asSlice().asString();
+        let collectionDataString: String = self.collection_base.asSlice().asString();
         b.append(collectionDataString);
-        b.append("meta.json"); // You can changed this your self.
         return CollectionData{
             next_item_index: self.next_item_index, 
             collection_content: b.toCell(), 
