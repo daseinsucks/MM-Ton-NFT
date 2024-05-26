@@ -5,12 +5,16 @@ message LogEventMintRecord {
 }
 
 
+
+message MintByOwner {
+    mint_to: Address;              
+}
+
+
 message(0x693d3950) GetRoyaltyParams {
     query_id: Int as uint64;
 }
-message(0x9a1f9bb0) UpdateTotalSupply {
-    new_total_supply: Int as uint32;
-}
+
 
 message(0xa8cb00ad) ReportRoyaltyParams {
     query_id: Int as uint64;

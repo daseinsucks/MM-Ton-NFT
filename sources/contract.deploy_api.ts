@@ -44,6 +44,7 @@ import { Voucher } from "./output/MM-NFT_Voucher";
         // Replace owner with your address
         let owner = wallet.address;
         let uniqueNonce = BigInt(Date.now());
+        let supply = BigInt(1000)
         console.log("Unique nonce: ", uniqueNonce);
         // Prepare the initial code and data for the contract
         let init = await VoucherCollection.init(owner, itemContent, collectionContent, {
@@ -51,7 +52,7 @@ import { Voucher } from "./output/MM-NFT_Voucher";
             numerator: 50n, // 50n = 5%
             denominator: 1000n,
             destination: owner,
-        }, uniqueNonce);
+        }, uniqueNonce, supply);
         let deployContract = contractAddress(0, init);
         
         // Ensure the contract address is new

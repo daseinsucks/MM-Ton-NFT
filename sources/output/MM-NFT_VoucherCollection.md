@@ -1,6 +1,6 @@
 # TACT Compilation Report
 Contract: VoucherCollection
-BOC Size: 1875 bytes
+BOC Size: 1913 bytes
 
 # Types
 Total Types: 15
@@ -21,13 +21,13 @@ Signature: `SendParameters{bounce:bool,to:address,value:int257,mode:int257,body:
 TLB: `log_event_mint_record#a3877d65 minter:address item_id:int257 generate_number:int257 = LogEventMintRecord`
 Signature: `LogEventMintRecord{minter:address,item_id:int257,generate_number:int257}`
 
+## MintByOwner
+TLB: `mint_by_owner#d3256b01 mint_to:address = MintByOwner`
+Signature: `MintByOwner{mint_to:address}`
+
 ## GetRoyaltyParams
 TLB: `get_royalty_params#693d3950 query_id:uint64 = GetRoyaltyParams`
 Signature: `GetRoyaltyParams{query_id:uint64}`
-
-## UpdateTotalSupply
-TLB: `update_total_supply#9a1f9bb0 new_total_supply:uint32 = UpdateTotalSupply`
-Signature: `UpdateTotalSupply{new_total_supply:uint32}`
 
 ## ReportRoyaltyParams
 TLB: `report_royalty_params#a8cb00ad query_id:uint64 numerator:uint16 denominator:uint16 destination:address = ReportRoyaltyParams`
@@ -111,4 +111,5 @@ Argument: individual_content
 37754: Total supply reached
 49280: not owner
 49469: not from collection
+57579: Only owner can mint
 62742: non-sequential NFTs

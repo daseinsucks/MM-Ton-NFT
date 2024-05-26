@@ -1,7 +1,6 @@
 import "./message.tact";
 const minTonsForStorage: Int = ton("0.02");
 const gasConsumption: Int = ton("0.02");
-const TOTAL_SUPPLY: Int = 1000; // Total supply constant
 contract VoucherCollection {
     next_item_index: Int as uint32 = 0;
     owner_address: Address;
@@ -9,24 +8,27 @@ contract VoucherCollection {
     collection_content: Cell;   
     collection_base: Cell;
     unique_nonce: Int;
+    TOTAL_SUPPLY: Int;
 
-    init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: Int){
+    init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: Int, TOTAL_SUPPLY: Int){
         self.owner_address = owner_address;
         self.collection_content = collection_content; 
         self.royalty_params = royalty_params;
         self.unique_nonce = unique_nonce;
         self.collection_base = collection_base;
+        self.TOTAL_SUPPLY = TOTAL_SUPPLY;
     }
 
-      receive("Mint"){
-        require(self.next_item_index < TOTAL_SUPPLY, "Total supply reached");
+      receive(msg: MintByOwner){
+        require(sender() == self.owner_address, "Only owner can mint");
+        require(self.next_item_index < self.TOTAL_SUPPLY, "Total supply reached");
         
         let ctx: Context = context(); // get sender Info
         let msgValue: Int = ctx.value;
         let tonBalanceBeforeMsg: Int = myBalance() - msgValue;
         let storageFee: Int = minTonsForStorage - min(tonBalanceBeforeMsg, minTonsForStorage);
         msgValue = msgValue - (storageFee + gasConsumption);
-        self.mint(ctx.sender, msgValue);
+        self.mint(msg.mint_to, msgValue);
 
         emit(LogEventMintRecord{ minter: sender(), item_id: self.next_item_index, generate_number: nativeRandom() }.toCell());
     }
