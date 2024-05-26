@@ -3,7 +3,6 @@
   "scripts": {
     "build": "tact --config ./tact.config.json",
     "test": "jest",
-    "deploy": "ts-node ./sources/contract.deploy.ts",
     "api_deploy": "ts-node ./sources/contract.deploy_api.ts",
     "read": "ts-node ./sources/contract.read.ts"
   },
