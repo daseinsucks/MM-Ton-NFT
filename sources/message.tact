@@ -10,6 +10,14 @@ message MintByOwner {
     mint_to: Address;              
 }
 
+message ChangeTreasury {
+    new_treasury: Address;              
+}
+
+message ChangeOwner {
+    new_owner: Address;              
+}
+
 
 message(0x693d3950) GetRoyaltyParams {
     query_id: Int as uint64;

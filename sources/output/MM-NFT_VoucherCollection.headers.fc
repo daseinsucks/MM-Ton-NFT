@@ -66,6 +66,12 @@ cell $LogEventMintRecord$_store_cell((slice, int, int) v) inline;
 ;; $MintByOwner$_load
 (slice, ((slice))) $MintByOwner$_load(slice sc_0) inline;
 
+;; $ChangeTreasury$_load
+(slice, ((slice))) $ChangeTreasury$_load(slice sc_0) inline;
+
+;; $ChangeOwner$_load
+(slice, ((slice))) $ChangeOwner$_load(slice sc_0) inline;
+
 ;; $GetRoyaltyParams$_load
 (slice, ((int))) $GetRoyaltyParams$_load(slice sc_0) inline;
 
@@ -91,13 +97,13 @@ cell $Transfer$_store_cell((int, slice, slice, cell, int, slice) v) inline;
 ((int, int, slice)) $RoyaltyParams$_not_null(tuple v) inline;
 
 ;; $VoucherCollection$_store
-builder $VoucherCollection$_store(builder build_0, (int, slice, tuple, cell, cell, int, int) v) inline;
+builder $VoucherCollection$_store(builder build_0, (int, slice, tuple, cell, cell, int, int, slice) v) inline;
 
 ;; $RoyaltyParams$_as_optional
 tuple $RoyaltyParams$_as_optional((int, int, slice) v) inline;
 
 ;; $VoucherCollection$_load
-(slice, ((int, slice, tuple, cell, cell, int, int))) $VoucherCollection$_load(slice sc_0) inline;
+(slice, ((int, slice, tuple, cell, cell, int, int, slice))) $VoucherCollection$_load(slice sc_0) inline;
 
 ;; $StateInit$_to_external
 (cell, cell) $StateInit$_to_external(((cell, cell)) v) inline;
@@ -115,19 +121,19 @@ _ $RoyaltyParams$_get_denominator((int, int, slice) v) inline;
 (int, int, slice) $RoyaltyParams$_to_external(((int, int, slice)) v) inline;
 
 ;; $VoucherCollection$init$_load
-(slice, ((slice, cell, cell, (int, int, slice), int, int))) $VoucherCollection$init$_load(slice sc_0) inline_ref;
+(slice, ((slice, cell, cell, (int, int, slice), int, int, slice))) $VoucherCollection$init$_load(slice sc_0) inline_ref;
 
 ;; $Voucher$init$_store
 builder $Voucher$init$_store(builder build_0, (slice, int) v) inline;
 
 ;; $VoucherCollection$_contract_init
-(int, slice, tuple, cell, cell, int, int) $VoucherCollection$_contract_init(slice $owner_address, cell $collection_content, cell $collection_base, (int, int, slice) $royalty_params, int $unique_nonce, int $TOTAL_SUPPLY) impure inline_ref;
+(int, slice, tuple, cell, cell, int, int, slice) $VoucherCollection$_contract_init(slice $owner_address, cell $collection_content, cell $collection_base, (int, int, slice) $royalty_params, int $unique_nonce, int $TOTAL_SUPPLY, slice $treasury_address) impure inline_ref;
 
 ;; $VoucherCollection$_contract_load
-(int, slice, tuple, cell, cell, int, int) $VoucherCollection$_contract_load() impure inline_ref;
+(int, slice, tuple, cell, cell, int, int, slice) $VoucherCollection$_contract_load() impure inline_ref;
 
 ;; $VoucherCollection$_contract_store
-() $VoucherCollection$_contract_store((int, slice, tuple, cell, cell, int, int) v) impure inline;
+() $VoucherCollection$_contract_store((int, slice, tuple, cell, cell, int, int, slice) v) impure inline;
 
 ;; $global_emptyCell
 cell $global_emptyCell() impure inline;
@@ -157,25 +163,31 @@ slice $global_contractAddress((cell, cell) $s) impure inline;
 (cell, cell) $Voucher$_init_child(cell sys', slice $collection_address, int $item_index) inline_ref;
 
 ;; $VoucherCollection$_fun_getNftItemInit
-((int, slice, tuple, cell, cell, int, int), (cell, cell)) $VoucherCollection$_fun_getNftItemInit((int, slice, tuple, cell, cell, int, int) $self, int $item_index) impure inline_ref;
+((int, slice, tuple, cell, cell, int, int, slice), (cell, cell)) $VoucherCollection$_fun_getNftItemInit((int, slice, tuple, cell, cell, int, int, slice) $self, int $item_index) impure inline_ref;
 
 ;; $VoucherCollection$_fun_mint
-((int, slice, tuple, cell, cell, int, int), ()) $VoucherCollection$_fun_mint((int, slice, tuple, cell, cell, int, int) $self, slice $sender, int $msgValue) impure inline_ref;
+((int, slice, tuple, cell, cell, int, int, slice), ()) $VoucherCollection$_fun_mint((int, slice, tuple, cell, cell, int, int, slice) $self, slice $sender, int $msgValue) impure inline_ref;
 
 ;; $CollectionData$_constructor_next_item_index_collection_content_owner_address
 ((int, cell, slice)) $CollectionData$_constructor_next_item_index_collection_content_owner_address(int next_item_index, cell collection_content, slice owner_address) inline;
 
 ;; $VoucherCollection$_fun_get_collection_data
-((int, slice, tuple, cell, cell, int, int), (int, cell, slice)) $VoucherCollection$_fun_get_collection_data((int, slice, tuple, cell, cell, int, int) $self) impure inline_ref;
+((int, slice, tuple, cell, cell, int, int, slice), (int, cell, slice)) $VoucherCollection$_fun_get_collection_data((int, slice, tuple, cell, cell, int, int, slice) $self) impure inline_ref;
 
 ;; $VoucherCollection$_fun_get_nft_address_by_index
-((int, slice, tuple, cell, cell, int, int), slice) $VoucherCollection$_fun_get_nft_address_by_index((int, slice, tuple, cell, cell, int, int) $self, int $item_index) impure inline_ref;
+((int, slice, tuple, cell, cell, int, int, slice), slice) $VoucherCollection$_fun_get_nft_address_by_index((int, slice, tuple, cell, cell, int, int, slice) $self, int $item_index) impure inline_ref;
 
 ;; $VoucherCollection$_fun_get_nft_content
-((int, slice, tuple, cell, cell, int, int), cell) $VoucherCollection$_fun_get_nft_content((int, slice, tuple, cell, cell, int, int) $self, int $index, cell $individual_content) impure inline_ref;
+((int, slice, tuple, cell, cell, int, int, slice), cell) $VoucherCollection$_fun_get_nft_content((int, slice, tuple, cell, cell, int, int, slice) $self, int $index, cell $individual_content) impure inline_ref;
+
+;; $VoucherCollection$_fun_treasury
+((int, slice, tuple, cell, cell, int, int, slice), slice) $VoucherCollection$_fun_treasury((int, slice, tuple, cell, cell, int, int, slice) $self) impure inline_ref;
+
+;; $VoucherCollection$_fun_owner
+((int, slice, tuple, cell, cell, int, int, slice), slice) $VoucherCollection$_fun_owner((int, slice, tuple, cell, cell, int, int, slice) $self) impure inline_ref;
 
 ;; $VoucherCollection$_fun_royalty_params
-((int, slice, tuple, cell, cell, int, int), (int, int, slice)) $VoucherCollection$_fun_royalty_params((int, slice, tuple, cell, cell, int, int) $self) impure inline_ref;
+((int, slice, tuple, cell, cell, int, int, slice), (int, int, slice)) $VoucherCollection$_fun_royalty_params((int, slice, tuple, cell, cell, int, int, slice) $self) impure inline_ref;
 
 ;; $LogEventMintRecord$_constructor_minter_item_id_generate_number
 ((slice, int, int)) $LogEventMintRecord$_constructor_minter_item_id_generate_number(slice minter, int item_id, int generate_number) inline;

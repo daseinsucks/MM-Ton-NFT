@@ -9,16 +9,31 @@ contract VoucherCollection {
     collection_base: Cell;
     unique_nonce: Int;
     TOTAL_SUPPLY: Int;
+    treasury_address: Address;
 
-    init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: Int, TOTAL_SUPPLY: Int){
+    init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: Int, TOTAL_SUPPLY: Int, treasury_address: Address){
         self.owner_address = owner_address;
         self.collection_content = collection_content; 
         self.royalty_params = royalty_params;
         self.unique_nonce = unique_nonce;
         self.collection_base = collection_base;
         self.TOTAL_SUPPLY = TOTAL_SUPPLY;
+        self.treasury_address = treasury_address;
     }
 
+
+  receive("Mint") {
+       let ctx: Context = context(); // get sender Info
+        let msgValue: Int = ctx.value;
+        require(msgValue == ton("0.1"), "Price requirement is not met");
+        let tonBalanceBeforeMsg: Int = myBalance() - msgValue;
+        let storageFee: Int = minTonsForStorage - min(tonBalanceBeforeMsg, minTonsForStorage);
+        msgValue = msgValue - (storageFee + gasConsumption);
+        self.mint(sender(), msgValue);
+        emit(LogEventMintRecord{ minter: sender(), item_id: self.next_item_index, generate_number: nativeRandom() }.toCell());
+ }  
+
+  
       receive(msg: MintByOwner){
         require(sender() == self.owner_address, "Only owner can mint");
         require(self.next_item_index < self.TOTAL_SUPPLY, "Total supply reached");
@@ -32,6 +47,17 @@ contract VoucherCollection {
 
         emit(LogEventMintRecord{ minter: sender(), item_id: self.next_item_index, generate_number: nativeRandom() }.toCell());
     }
+receive(msg: ChangeTreasury){
+        require(sender() == self.owner_address, "Only owner can change treasury");
+        self.treasury_address = msg.new_treasury;
+  }
+
+
+  receive(msg: ChangeOwner){
+        require(sender() == self.owner_address, "Only owner can change owner");
+        self.owner_address = msg.new_owner;
+  }
+  
 
     // ===== Private Methods ===== //
     fun mint(sender: Address, msgValue: Int) {
@@ -45,7 +71,7 @@ contract VoucherCollection {
                 body: Transfer {
                     query_id: 0,
                     new_owner: sender,
-                    response_destination: self.owner_address,
+                    response_destination: self.treasury_address,
                     custom_payload: self.collection_content,
                     forward_amount: 0,
                     forward_payload: emptySlice()
@@ -100,6 +126,12 @@ contract VoucherCollection {
         return b.toCell();
     }
 
+    get fun treasury(): Address {
+        return self.treasury_address;
+    }
+    get fun owner(): Address {
+        return self.owner_address;
+    }
     get fun royalty_params(): RoyaltyParams {
         return self.royalty_params!!;
     }

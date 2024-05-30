@@ -57,6 +57,30 @@ cell $LogEventMintRecord$_store_cell((slice, int, int) v) inline {
 }
 
 ;;
+;; Type: ChangeTreasury
+;; Header: 0xf28d292a
+;; TLB: change_treasury#f28d292a new_treasury:address = ChangeTreasury
+;;
+
+(slice, ((slice))) $ChangeTreasury$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 4069337386);
+    var v'new_treasury = sc_0~__tact_load_address();
+    return (sc_0, (v'new_treasury));
+}
+
+;;
+;; Type: ChangeOwner
+;; Header: 0xd9ae38fe
+;; TLB: change_owner#d9ae38fe new_owner:address = ChangeOwner
+;;
+
+(slice, ((slice))) $ChangeOwner$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 3652073726);
+    var v'new_owner = sc_0~__tact_load_address();
+    return (sc_0, (v'new_owner));
+}
+
+;;
 ;; Type: GetRoyaltyParams
 ;; Header: 0x693d3950
 ;; TLB: get_royalty_params#693d3950 query_id:uint64 = GetRoyaltyParams
@@ -182,8 +206,8 @@ cell $Transfer$_store_cell((int, slice, slice, cell, int, slice) v) inline {
 ;; Type: VoucherCollection
 ;;
 
-builder $VoucherCollection$_store(builder build_0, (int, slice, tuple, cell, cell, int, int) v) inline {
-    var (v'next_item_index, v'owner_address, v'royalty_params, v'collection_content, v'collection_base, v'unique_nonce, v'TOTAL_SUPPLY) = v;
+builder $VoucherCollection$_store(builder build_0, (int, slice, tuple, cell, cell, int, int, slice) v) inline {
+    var (v'next_item_index, v'owner_address, v'royalty_params, v'collection_content, v'collection_base, v'unique_nonce, v'TOTAL_SUPPLY, v'treasury_address) = v;
     build_0 = build_0.store_uint(v'next_item_index, 32);
     build_0 = __tact_store_address(build_0, v'owner_address);
     var build_1 = begin_cell();
@@ -193,12 +217,13 @@ builder $VoucherCollection$_store(builder build_0, (int, slice, tuple, cell, cel
     var build_2 = begin_cell();
     build_2 = build_2.store_int(v'unique_nonce, 257);
     build_2 = build_2.store_int(v'TOTAL_SUPPLY, 257);
+    build_2 = __tact_store_address(build_2, v'treasury_address);
     build_1 = store_ref(build_1, build_2.end_cell());
     build_0 = store_ref(build_0, build_1.end_cell());
     return build_0;
 }
 
-(slice, ((int, slice, tuple, cell, cell, int, int))) $VoucherCollection$_load(slice sc_0) inline {
+(slice, ((int, slice, tuple, cell, cell, int, int, slice))) $VoucherCollection$_load(slice sc_0) inline {
     var v'next_item_index = sc_0~load_uint(32);
     var v'owner_address = sc_0~__tact_load_address();
     slice sc_1 = sc_0~load_ref().begin_parse();
@@ -208,10 +233,11 @@ builder $VoucherCollection$_store(builder build_0, (int, slice, tuple, cell, cel
     slice sc_2 = sc_1~load_ref().begin_parse();
     var v'unique_nonce = sc_2~load_int(257);
     var v'TOTAL_SUPPLY = sc_2~load_int(257);
-    return (sc_0, (v'next_item_index, v'owner_address, v'royalty_params, v'collection_content, v'collection_base, v'unique_nonce, v'TOTAL_SUPPLY));
+    var v'treasury_address = sc_2~__tact_load_address();
+    return (sc_0, (v'next_item_index, v'owner_address, v'royalty_params, v'collection_content, v'collection_base, v'unique_nonce, v'TOTAL_SUPPLY, v'treasury_address));
 }
 
-(slice, ((slice, cell, cell, (int, int, slice), int, int))) $VoucherCollection$init$_load(slice sc_0) inline_ref {
+(slice, ((slice, cell, cell, (int, int, slice), int, int, slice))) $VoucherCollection$init$_load(slice sc_0) inline_ref {
     var v'owner_address = sc_0~__tact_load_address();
     var v'collection_content = sc_0~load_ref();
     var v'collection_base = sc_0~load_ref();
@@ -220,10 +246,11 @@ builder $VoucherCollection$_store(builder build_0, (int, slice, tuple, cell, cel
     slice sc_2 = sc_1~load_ref().begin_parse();
     var v'unique_nonce = sc_2~load_int(257);
     var v'TOTAL_SUPPLY = sc_2~load_int(257);
-    return (sc_0, (v'owner_address, v'collection_content, v'collection_base, v'royalty_params, v'unique_nonce, v'TOTAL_SUPPLY));
+    var v'treasury_address = sc_2~__tact_load_address();
+    return (sc_0, (v'owner_address, v'collection_content, v'collection_base, v'royalty_params, v'unique_nonce, v'TOTAL_SUPPLY, v'treasury_address));
 }
 
-(int, slice, tuple, cell, cell, int, int) $VoucherCollection$_contract_load() impure inline_ref {
+(int, slice, tuple, cell, cell, int, int, slice) $VoucherCollection$_contract_load() impure inline_ref {
     slice $sc = get_data().begin_parse();
     __tact_context_sys = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -232,13 +259,13 @@ builder $VoucherCollection$_store(builder build_0, (int, slice, tuple, cell, cel
     } else {
         ;; Allow only workchain deployments
         throw_unless(137, my_address().preload_uint(11) == 1024);
-        (slice owner_address, cell collection_content, cell collection_base, (int, int, slice) royalty_params, int unique_nonce, int TOTAL_SUPPLY) = $sc~$VoucherCollection$init$_load();
+        (slice owner_address, cell collection_content, cell collection_base, (int, int, slice) royalty_params, int unique_nonce, int TOTAL_SUPPLY, slice treasury_address) = $sc~$VoucherCollection$init$_load();
         $sc.end_parse();
-        return $VoucherCollection$_contract_init(owner_address, collection_content, collection_base, royalty_params, unique_nonce, TOTAL_SUPPLY);
+        return $VoucherCollection$_contract_init(owner_address, collection_content, collection_base, royalty_params, unique_nonce, TOTAL_SUPPLY, treasury_address);
     }
 }
 
-() $VoucherCollection$_contract_store((int, slice, tuple, cell, cell, int, int) v) impure inline {
+() $VoucherCollection$_contract_store((int, slice, tuple, cell, cell, int, int, slice) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_context_sys);
     b = b.store_int(true, 1);

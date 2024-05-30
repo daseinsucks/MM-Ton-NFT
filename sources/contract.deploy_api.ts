@@ -18,13 +18,21 @@ import { VoucherCollection } from "./output/MM-NFT_VoucherCollection";
 import { Voucher } from "./output/MM-NFT_Voucher";
 // ================================================================= //
 
+import { getHttpV4Endpoint } from "@orbs-network/ton-access";
+
+
+// get the decentralized RPC endpoint
+
+
+// initialize ton library
+
 (async () => {
+    const endpoint = await getHttpV4Endpoint({
+
+      });
     try {
         // Create client for testnet sandboxv4 API - alternative endpoint
-        const client4 = new TonClient4({
-            endpoint: "https://sandbox-v4.tonhubapi.com", // Test-net
-        });
-
+        const client4 = new TonClient4({ endpoint });
         // Parameters for NFTs
         const OFFCHAIN_CONTENT_PREFIX = 0x01;
         const item_link = "https://ipfs.io/ipfs/QmcysCFEJrJfQ937XDcPkyXJqvifUd6jBnJJ3bd5Dz9YKC"; // Change to the content URL you prepared
@@ -40,7 +48,7 @@ import { Voucher } from "./output/MM-NFT_Voucher";
         let wallet = WalletContractV4.create({ workchain, publicKey: keyPair.publicKey });
         let wallet_contract = client4.open(wallet);
         console.log("Wallet address: ", wallet_contract.address);
-
+        let treasury = Address.parse("UQD7q-FZjYmMA00mBGgM_317OCylWk-5C6NSL4ToEXcKbbev");
         // Replace owner with your address
         let owner = wallet.address;
         let uniqueNonce = BigInt(Date.now());
@@ -52,7 +60,7 @@ import { Voucher } from "./output/MM-NFT_Voucher";
             numerator: 50n, // 50n = 5%
             denominator: 1000n,
             destination: owner,
-        }, uniqueNonce, supply);
+        }, uniqueNonce, supply, treasury);
         let deployContract = contractAddress(0, init);
         
         // Ensure the contract address is new

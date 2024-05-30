@@ -10,65 +10,89 @@
 ;; Contract VoucherCollection functions
 ;;
 
-(int, slice, tuple, cell, cell, int, int) $VoucherCollection$_contract_init(slice $owner_address, cell $collection_content, cell $collection_base, (int, int, slice) $royalty_params, int $unique_nonce, int $TOTAL_SUPPLY) impure inline_ref {
+(int, slice, tuple, cell, cell, int, int, slice) $VoucherCollection$_contract_init(slice $owner_address, cell $collection_content, cell $collection_base, (int, int, slice) $royalty_params, int $unique_nonce, int $TOTAL_SUPPLY, slice $treasury_address) impure inline_ref {
     var (($royalty_params'numerator, $royalty_params'denominator, $royalty_params'destination)) = $royalty_params;
-    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)) = (0, null(), null(), null(), null(), null(), null());
+    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)) = (0, null(), null(), null(), null(), null(), null(), null());
     $self'owner_address = $owner_address;
     $self'collection_content = $collection_content;
     $self'royalty_params = $RoyaltyParams$_as_optional(($royalty_params'numerator, $royalty_params'denominator, $royalty_params'destination));
     $self'unique_nonce = $unique_nonce;
     $self'collection_base = $collection_base;
     $self'TOTAL_SUPPLY = $TOTAL_SUPPLY;
-    return ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY);
+    $self'treasury_address = $treasury_address;
+    return ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address);
 }
 
-((int, slice, tuple, cell, cell, int, int), (cell, cell)) $VoucherCollection$_fun_getNftItemInit((int, slice, tuple, cell, cell, int, int) $self, int $item_index) impure inline_ref {
-    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)) = $self;
-    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY), $Voucher$_init_child(__tact_context_sys, my_address(), $item_index));
+((int, slice, tuple, cell, cell, int, int, slice), (cell, cell)) $VoucherCollection$_fun_getNftItemInit((int, slice, tuple, cell, cell, int, int, slice) $self, int $item_index) impure inline_ref {
+    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)) = $self;
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), $Voucher$_init_child(__tact_context_sys, my_address(), $item_index));
 }
 
-((int, slice, tuple, cell, cell, int, int), ()) $VoucherCollection$_fun_mint((int, slice, tuple, cell, cell, int, int) $self, slice $sender, int $msgValue) impure inline_ref {
-    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)) = $self;
+((int, slice, tuple, cell, cell, int, int, slice), ()) $VoucherCollection$_fun_mint((int, slice, tuple, cell, cell, int, int, slice) $self, slice $sender, int $msgValue) impure inline_ref {
+    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)) = $self;
     throw_unless(62742, ($self'next_item_index >= 0));
-    var ($nft_init'code, $nft_init'data) = ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)~$VoucherCollection$_fun_getNftItemInit($self'next_item_index);
-    $global_send($SendParameters$_constructor_to_value_bounce_mode_body_code_data($global_contractAddress(($nft_init'code, $nft_init'data)), $msgValue, false, 2, $Transfer$_store_cell($Transfer$_constructor_query_id_new_owner_response_destination_custom_payload_forward_amount_forward_payload(0, $sender, $self'owner_address, $self'collection_content, 0, $global_emptySlice())), $nft_init'code, $nft_init'data));
+    var ($nft_init'code, $nft_init'data) = ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)~$VoucherCollection$_fun_getNftItemInit($self'next_item_index);
+    $global_send($SendParameters$_constructor_to_value_bounce_mode_body_code_data($global_contractAddress(($nft_init'code, $nft_init'data)), $msgValue, false, 2, $Transfer$_store_cell($Transfer$_constructor_query_id_new_owner_response_destination_custom_payload_forward_amount_forward_payload(0, $sender, $self'treasury_address, $self'collection_content, 0, $global_emptySlice())), $nft_init'code, $nft_init'data));
     $self'next_item_index = ($self'next_item_index + 1);
-    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY), ());
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), ());
 }
 
-((int, slice, tuple, cell, cell, int, int), (int, cell, slice)) $VoucherCollection$_fun_get_collection_data((int, slice, tuple, cell, cell, int, int) $self) impure inline_ref {
-    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)) = $self;
+((int, slice, tuple, cell, cell, int, int, slice), (int, cell, slice)) $VoucherCollection$_fun_get_collection_data((int, slice, tuple, cell, cell, int, int, slice) $self) impure inline_ref {
+    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)) = $self;
     tuple $b = __tact_string_builder_start_string();
     slice $collectionDataString = __tact_slice_to_str($Cell$_fun_asSlice($self'collection_base));
     $b~__tact_string_builder_append($collectionDataString);
-    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY), $CollectionData$_constructor_next_item_index_collection_content_owner_address($self'next_item_index, __tact_string_builder_end($b), $self'owner_address));
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), $CollectionData$_constructor_next_item_index_collection_content_owner_address($self'next_item_index, __tact_string_builder_end($b), $self'owner_address));
 }
 
-((int, slice, tuple, cell, cell, int, int), slice) $VoucherCollection$_fun_get_nft_address_by_index((int, slice, tuple, cell, cell, int, int) $self, int $item_index) impure inline_ref {
-    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)) = $self;
-    var ($initCode'code, $initCode'data) = ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)~$VoucherCollection$_fun_getNftItemInit($item_index);
-    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY), $global_contractAddress(($initCode'code, $initCode'data)));
+((int, slice, tuple, cell, cell, int, int, slice), slice) $VoucherCollection$_fun_get_nft_address_by_index((int, slice, tuple, cell, cell, int, int, slice) $self, int $item_index) impure inline_ref {
+    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)) = $self;
+    var ($initCode'code, $initCode'data) = ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)~$VoucherCollection$_fun_getNftItemInit($item_index);
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), $global_contractAddress(($initCode'code, $initCode'data)));
 }
 
-((int, slice, tuple, cell, cell, int, int), cell) $VoucherCollection$_fun_get_nft_content((int, slice, tuple, cell, cell, int, int) $self, int $index, cell $individual_content) impure inline_ref {
-    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)) = $self;
+((int, slice, tuple, cell, cell, int, int, slice), cell) $VoucherCollection$_fun_get_nft_content((int, slice, tuple, cell, cell, int, int, slice) $self, int $index, cell $individual_content) impure inline_ref {
+    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)) = $self;
     tuple $b = __tact_string_builder_start_string();
     slice $ic = __tact_slice_to_str($Cell$_fun_asSlice($individual_content));
     $b~__tact_string_builder_append($ic);
-    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY), __tact_string_builder_end($b));
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), __tact_string_builder_end($b));
 }
 
-((int, slice, tuple, cell, cell, int, int), (int, int, slice)) $VoucherCollection$_fun_royalty_params((int, slice, tuple, cell, cell, int, int) $self) impure inline_ref {
-    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)) = $self;
-    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY), $RoyaltyParams$_not_null($self'royalty_params));
+((int, slice, tuple, cell, cell, int, int, slice), slice) $VoucherCollection$_fun_treasury((int, slice, tuple, cell, cell, int, int, slice) $self) impure inline_ref {
+    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)) = $self;
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), $self'treasury_address);
+}
+
+((int, slice, tuple, cell, cell, int, int, slice), slice) $VoucherCollection$_fun_owner((int, slice, tuple, cell, cell, int, int, slice) $self) impure inline_ref {
+    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)) = $self;
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), $self'owner_address);
+}
+
+((int, slice, tuple, cell, cell, int, int, slice), (int, int, slice)) $VoucherCollection$_fun_royalty_params((int, slice, tuple, cell, cell, int, int, slice) $self) impure inline_ref {
+    var (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)) = $self;
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), $RoyaltyParams$_not_null($self'royalty_params));
 }
 
 ;;
 ;; Receivers of a Contract VoucherCollection
 ;;
 
-(((int, slice, tuple, cell, cell, int, int)), ()) $VoucherCollection$_internal_binary_MintByOwner((int, slice, tuple, cell, cell, int, int) $self, (slice) $msg) impure inline {
-    var ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY) = $self;
+((int, slice, tuple, cell, cell, int, int, slice), ()) $VoucherCollection$_internal_text_247c7bd5f39e2258d80ac36a0419a1ab5779757825a6cc0e915368f00610a18a((int, slice, tuple, cell, cell, int, int, slice) $self) impure inline {
+    var ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address) = $self;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    int $msgValue = $ctx'value;
+    throw_unless(53983, ($msgValue == 1000000000));
+    int $tonBalanceBeforeMsg = (__tact_my_balance() - $msgValue);
+    int $storageFee = (20000000 - min($tonBalanceBeforeMsg, 20000000));
+    $msgValue = ($msgValue - ($storageFee + 20000000));
+    ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)~$VoucherCollection$_fun_mint(__tact_context_get_sender(), $msgValue);
+    $global_emit($LogEventMintRecord$_store_cell($LogEventMintRecord$_constructor_minter_item_id_generate_number(__tact_context_get_sender(), $self'next_item_index, random())));
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), ());
+}
+
+(((int, slice, tuple, cell, cell, int, int, slice)), ()) $VoucherCollection$_internal_binary_MintByOwner((int, slice, tuple, cell, cell, int, int, slice) $self, (slice) $msg) impure inline {
+    var ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address) = $self;
     var ($msg'mint_to) = $msg;
     throw_unless(57579, ( __tact_slice_eq_bits($self'owner_address, __tact_context_get_sender()) ));
     throw_unless(37754, ($self'next_item_index < $self'TOTAL_SUPPLY));
@@ -77,17 +101,33 @@
     int $tonBalanceBeforeMsg = (__tact_my_balance() - $msgValue);
     int $storageFee = (20000000 - min($tonBalanceBeforeMsg, 20000000));
     $msgValue = ($msgValue - ($storageFee + 20000000));
-    ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY)~$VoucherCollection$_fun_mint($msg'mint_to, $msgValue);
+    ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address)~$VoucherCollection$_fun_mint($msg'mint_to, $msgValue);
     $global_emit($LogEventMintRecord$_store_cell($LogEventMintRecord$_constructor_minter_item_id_generate_number(__tact_context_get_sender(), $self'next_item_index, random())));
-    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY), ());
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), ());
 }
 
-(((int, slice, tuple, cell, cell, int, int)), ()) $VoucherCollection$_internal_binary_GetRoyaltyParams((int, slice, tuple, cell, cell, int, int) $self, (int) $msg) impure inline {
-    var ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY) = $self;
+(((int, slice, tuple, cell, cell, int, int, slice)), ()) $VoucherCollection$_internal_binary_ChangeTreasury((int, slice, tuple, cell, cell, int, int, slice) $self, (slice) $msg) impure inline {
+    var ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address) = $self;
+    var ($msg'new_treasury) = $msg;
+    throw_unless(31295, ( __tact_slice_eq_bits($self'owner_address, __tact_context_get_sender()) ));
+    $self'treasury_address = $msg'new_treasury;
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), ());
+}
+
+(((int, slice, tuple, cell, cell, int, int, slice)), ()) $VoucherCollection$_internal_binary_ChangeOwner((int, slice, tuple, cell, cell, int, int, slice) $self, (slice) $msg) impure inline {
+    var ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address) = $self;
+    var ($msg'new_owner) = $msg;
+    throw_unless(27145, ( __tact_slice_eq_bits($self'owner_address, __tact_context_get_sender()) ));
+    $self'owner_address = $msg'new_owner;
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), ());
+}
+
+(((int, slice, tuple, cell, cell, int, int, slice)), ()) $VoucherCollection$_internal_binary_GetRoyaltyParams((int, slice, tuple, cell, cell, int, int, slice) $self, (int) $msg) impure inline {
+    var ($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address) = $self;
     var ($msg'query_id) = $msg;
     var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
     $global_send($SendParameters$_constructor_to_value_mode_bounce_body($ctx'sender, 0, 64, false, $ReportRoyaltyParams$_store_cell($ReportRoyaltyParams$_constructor_query_id_numerator_denominator_destination($msg'query_id, $RoyaltyParams$_get_numerator($RoyaltyParams$_not_null($self'royalty_params)), $RoyaltyParams$_get_denominator($RoyaltyParams$_not_null($self'royalty_params)), $self'owner_address))));
-    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY), ());
+    return (($self'next_item_index, $self'owner_address, $self'royalty_params, $self'collection_content, $self'collection_base, $self'unique_nonce, $self'TOTAL_SUPPLY, $self'treasury_address), ());
 }
 
 ;;
@@ -122,6 +162,18 @@ _ %get_nft_content(int $$index, cell $$individual_content) method_id(68445) {
     return res;
 }
 
+_ %treasury() method_id(106403) {
+    var self = $VoucherCollection$_contract_load();
+    var res = self~$VoucherCollection$_fun_treasury();
+    return res;
+}
+
+_ %owner() method_id(83229) {
+    var self = $VoucherCollection$_contract_load();
+    var res = self~$VoucherCollection$_fun_owner();
+    return res;
+}
+
 _ %royalty_params() method_id(85719) {
     var self = $VoucherCollection$_contract_load();
     var res = self~$VoucherCollection$_fun_royalty_params();
@@ -139,7 +191,7 @@ _ supported_interfaces() method_id {
 }
 
 _ get_abi_ipfs() method_id {
-    return "ipfs://QmY7AgWKdViAmVoJtamdsUuYN3ALzd4TjqdwqEuzMZAwin";
+    return "ipfs://QmXyV1rv5W8FpSAQFJMdFvVeu9M3pDEp7TC11hciXvDt16";
 }
 
 _ lazy_deployment_completed() method_id {
@@ -150,7 +202,7 @@ _ lazy_deployment_completed() method_id {
 ;; Routing of a Contract VoucherCollection
 ;;
 
-((int, slice, tuple, cell, cell, int, int), int) $VoucherCollection$_contract_router_internal((int, slice, tuple, cell, cell, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+((int, slice, tuple, cell, cell, int, int, slice), int) $VoucherCollection$_contract_router_internal((int, slice, tuple, cell, cell, int, int, slice) self, int msg_bounced, slice in_msg) impure inline_ref {
     ;; Handle bounced messages
     if (msg_bounced) {
         return (self, true);
@@ -170,11 +222,36 @@ _ lazy_deployment_completed() method_id {
         return (self, true);
     }
     
+    ;; Receive ChangeTreasury message
+    if (op == 4069337386) {
+        var msg = in_msg~$ChangeTreasury$_load();
+        self~$VoucherCollection$_internal_binary_ChangeTreasury(msg);
+        return (self, true);
+    }
+    
+    ;; Receive ChangeOwner message
+    if (op == 3652073726) {
+        var msg = in_msg~$ChangeOwner$_load();
+        self~$VoucherCollection$_internal_binary_ChangeOwner(msg);
+        return (self, true);
+    }
+    
     ;; Receive GetRoyaltyParams message
     if (op == 1765620048) {
         var msg = in_msg~$GetRoyaltyParams$_load();
         self~$VoucherCollection$_internal_binary_GetRoyaltyParams(msg);
         return (self, true);
+    }
+    
+    ;; Text Receivers
+    if (op == 0) {
+        var text_op = slice_hash(in_msg);
+        
+        ;; Receive "Mint" message
+        if (text_op == 0x247c7bd5f39e2258d80ac36a0419a1ab5779757825a6cc0e915368f00610a18a) {
+            self~$VoucherCollection$_internal_text_247c7bd5f39e2258d80ac36a0419a1ab5779757825a6cc0e915368f00610a18a();
+            return (self, true);
+        }
     }
     
     return (self, false);

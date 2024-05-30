@@ -23,7 +23,7 @@ import { VoucherCollection, MintByOwner } from "./output/MM-NFT_VoucherCollectio
 // 7. Готово 
  
 
-let user_address = Address.parse("UQBtQoMmK74ty03hcCicDUVNtVc9DhyT-_LLgDqZ57iD_VHF"); //получаем с кошелька пользователя через tonconnect
+let user_address = Address.parse("UQD7q-FZjYmMA00mBGgM_317OCylWk-5C6NSL4ToEXcKbbev"); //получаем с кошелька пользователя через tonconnect
 
 
 const MintMsg: MintByOwner= {

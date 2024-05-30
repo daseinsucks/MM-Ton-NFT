@@ -284,6 +284,90 @@ function dictValueParserMintByOwner(): DictionaryValue<MintByOwner> {
     }
 }
 
+export type ChangeTreasury = {
+    $$type: 'ChangeTreasury';
+    new_treasury: Address;
+}
+
+export function storeChangeTreasury(src: ChangeTreasury) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(4069337386, 32);
+        b_0.storeAddress(src.new_treasury);
+    };
+}
+
+export function loadChangeTreasury(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 4069337386) { throw Error('Invalid prefix'); }
+    let _new_treasury = sc_0.loadAddress();
+    return { $$type: 'ChangeTreasury' as const, new_treasury: _new_treasury };
+}
+
+function loadTupleChangeTreasury(source: TupleReader) {
+    let _new_treasury = source.readAddress();
+    return { $$type: 'ChangeTreasury' as const, new_treasury: _new_treasury };
+}
+
+function storeTupleChangeTreasury(source: ChangeTreasury) {
+    let builder = new TupleBuilder();
+    builder.writeAddress(source.new_treasury);
+    return builder.build();
+}
+
+function dictValueParserChangeTreasury(): DictionaryValue<ChangeTreasury> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeChangeTreasury(src)).endCell());
+        },
+        parse: (src) => {
+            return loadChangeTreasury(src.loadRef().beginParse());
+        }
+    }
+}
+
+export type ChangeOwner = {
+    $$type: 'ChangeOwner';
+    new_owner: Address;
+}
+
+export function storeChangeOwner(src: ChangeOwner) {
+    return (builder: Builder) => {
+        let b_0 = builder;
+        b_0.storeUint(3652073726, 32);
+        b_0.storeAddress(src.new_owner);
+    };
+}
+
+export function loadChangeOwner(slice: Slice) {
+    let sc_0 = slice;
+    if (sc_0.loadUint(32) !== 3652073726) { throw Error('Invalid prefix'); }
+    let _new_owner = sc_0.loadAddress();
+    return { $$type: 'ChangeOwner' as const, new_owner: _new_owner };
+}
+
+function loadTupleChangeOwner(source: TupleReader) {
+    let _new_owner = source.readAddress();
+    return { $$type: 'ChangeOwner' as const, new_owner: _new_owner };
+}
+
+function storeTupleChangeOwner(source: ChangeOwner) {
+    let builder = new TupleBuilder();
+    builder.writeAddress(source.new_owner);
+    return builder.build();
+}
+
+function dictValueParserChangeOwner(): DictionaryValue<ChangeOwner> {
+    return {
+        serialize: (src, buidler) => {
+            buidler.storeRef(beginCell().store(storeChangeOwner(src)).endCell());
+        },
+        parse: (src) => {
+            return loadChangeOwner(src.loadRef().beginParse());
+        }
+    }
+}
+
 export type GetRoyaltyParams = {
     $$type: 'GetRoyaltyParams';
     query_id: bigint;
@@ -806,6 +890,7 @@ function dictValueParserGetNftData(): DictionaryValue<GetNftData> {
     royalty_params: RoyaltyParams;
     unique_nonce: bigint;
     TOTAL_SUPPLY: bigint;
+    treasury_address: Address;
 }
 
 function initVoucherCollection_init_args(src: VoucherCollection_init_args) {
@@ -819,18 +904,19 @@ function initVoucherCollection_init_args(src: VoucherCollection_init_args) {
         let b_2 = new Builder();
         b_2.storeInt(src.unique_nonce, 257);
         b_2.storeInt(src.TOTAL_SUPPLY, 257);
+        b_2.storeAddress(src.treasury_address);
         b_1.storeRef(b_2.endCell());
         b_0.storeRef(b_1.endCell());
     };
 }
 
-async function VoucherCollection_init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: bigint, TOTAL_SUPPLY: bigint) {
-    const __code = Cell.fromBase64('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');
-    const __system = Cell.fromBase64('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');
+async function VoucherCollection_init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: bigint, TOTAL_SUPPLY: bigint, treasury_address: Address) {
+    const __code = Cell.fromBase64('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');
+    const __system = Cell.fromBase64('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');
     let builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
-    initVoucherCollection_init_args({ $$type: 'VoucherCollection_init_args', owner_address, collection_content, collection_base, royalty_params, unique_nonce, TOTAL_SUPPLY })(builder);
+    initVoucherCollection_init_args({ $$type: 'VoucherCollection_init_args', owner_address, collection_content, collection_base, royalty_params, unique_nonce, TOTAL_SUPPLY, treasury_address })(builder);
     const __data = builder.endCell();
     return { code: __code, data: __data };
 }
@@ -860,10 +946,13 @@ const VoucherCollection_errors: { [key: number]: { message: string } } = {
     135: { message: `Code of a contract was not found` },
     136: { message: `Invalid address` },
     137: { message: `Masterchain support is not enabled for this contract` },
+    27145: { message: `Only owner can change owner` },
     27499: { message: `initialized tx need from collection` },
+    31295: { message: `Only owner can change treasury` },
     37754: { message: `Total supply reached` },
     49280: { message: `not owner` },
     49469: { message: `not from collection` },
+    53983: { message: `Price requirement is not met` },
     57579: { message: `Only owner can mint` },
     62742: { message: `non-sequential NFTs` },
 }
@@ -874,6 +963,8 @@ const VoucherCollection_types: ABIType[] = [
     {"name":"SendParameters","header":null,"fields":[{"name":"bounce","type":{"kind":"simple","type":"bool","optional":false}},{"name":"to","type":{"kind":"simple","type":"address","optional":false}},{"name":"value","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"mode","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"body","type":{"kind":"simple","type":"cell","optional":true}},{"name":"code","type":{"kind":"simple","type":"cell","optional":true}},{"name":"data","type":{"kind":"simple","type":"cell","optional":true}}]},
     {"name":"LogEventMintRecord","header":2743565669,"fields":[{"name":"minter","type":{"kind":"simple","type":"address","optional":false}},{"name":"item_id","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"generate_number","type":{"kind":"simple","type":"int","optional":false,"format":257}}]},
     {"name":"MintByOwner","header":3542444801,"fields":[{"name":"mint_to","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"ChangeTreasury","header":4069337386,"fields":[{"name":"new_treasury","type":{"kind":"simple","type":"address","optional":false}}]},
+    {"name":"ChangeOwner","header":3652073726,"fields":[{"name":"new_owner","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"GetRoyaltyParams","header":1765620048,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}}]},
     {"name":"ReportRoyaltyParams","header":2831876269,"fields":[{"name":"query_id","type":{"kind":"simple","type":"uint","optional":false,"format":64}},{"name":"numerator","type":{"kind":"simple","type":"uint","optional":false,"format":16}},{"name":"denominator","type":{"kind":"simple","type":"uint","optional":false,"format":16}},{"name":"destination","type":{"kind":"simple","type":"address","optional":false}}]},
     {"name":"CollectionData","header":null,"fields":[{"name":"next_item_index","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"collection_content","type":{"kind":"simple","type":"cell","optional":false}},{"name":"owner_address","type":{"kind":"simple","type":"address","optional":false}}]},
@@ -891,22 +982,27 @@ const VoucherCollection_getters: ABIGetter[] = [
     {"name":"get_nft_address_by_index","arguments":[{"name":"item_index","type":{"kind":"simple","type":"int","optional":false,"format":257}}],"returnType":{"kind":"simple","type":"address","optional":true}},
     {"name":"getNftItemInit","arguments":[{"name":"item_index","type":{"kind":"simple","type":"int","optional":false,"format":257}}],"returnType":{"kind":"simple","type":"StateInit","optional":false}},
     {"name":"get_nft_content","arguments":[{"name":"index","type":{"kind":"simple","type":"int","optional":false,"format":257}},{"name":"individual_content","type":{"kind":"simple","type":"cell","optional":false}}],"returnType":{"kind":"simple","type":"cell","optional":false}},
+    {"name":"treasury","arguments":[],"returnType":{"kind":"simple","type":"address","optional":false}},
+    {"name":"owner","arguments":[],"returnType":{"kind":"simple","type":"address","optional":false}},
     {"name":"royalty_params","arguments":[],"returnType":{"kind":"simple","type":"RoyaltyParams","optional":false}},
 ]
 
 const VoucherCollection_receivers: ABIReceiver[] = [
+    {"receiver":"internal","message":{"kind":"text","text":"Mint"}},
     {"receiver":"internal","message":{"kind":"typed","type":"MintByOwner"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"ChangeTreasury"}},
+    {"receiver":"internal","message":{"kind":"typed","type":"ChangeOwner"}},
     {"receiver":"internal","message":{"kind":"typed","type":"GetRoyaltyParams"}},
 ]
 
 export class VoucherCollection implements Contract {
     
-    static async init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: bigint, TOTAL_SUPPLY: bigint) {
-        return await VoucherCollection_init(owner_address, collection_content, collection_base, royalty_params, unique_nonce, TOTAL_SUPPLY);
+    static async init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: bigint, TOTAL_SUPPLY: bigint, treasury_address: Address) {
+        return await VoucherCollection_init(owner_address, collection_content, collection_base, royalty_params, unique_nonce, TOTAL_SUPPLY, treasury_address);
     }
     
-    static async fromInit(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: bigint, TOTAL_SUPPLY: bigint) {
-        const init = await VoucherCollection_init(owner_address, collection_content, collection_base, royalty_params, unique_nonce, TOTAL_SUPPLY);
+    static async fromInit(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: bigint, TOTAL_SUPPLY: bigint, treasury_address: Address) {
+        const init = await VoucherCollection_init(owner_address, collection_content, collection_base, royalty_params, unique_nonce, TOTAL_SUPPLY, treasury_address);
         const address = contractAddress(0, init);
         return new VoucherCollection(address, init);
     }
@@ -929,11 +1025,20 @@ export class VoucherCollection implements Contract {
         this.init = init;
     }
     
-    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: MintByOwner | GetRoyaltyParams) {
+    async send(provider: ContractProvider, via: Sender, args: { value: bigint, bounce?: boolean| null | undefined }, message: 'Mint' | MintByOwner | ChangeTreasury | ChangeOwner | GetRoyaltyParams) {
         
         let body: Cell | null = null;
+        if (message === 'Mint') {
+            body = beginCell().storeUint(0, 32).storeStringTail(message).endCell();
+        }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'MintByOwner') {
             body = beginCell().store(storeMintByOwner(message)).endCell();
+        }
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'ChangeTreasury') {
+            body = beginCell().store(storeChangeTreasury(message)).endCell();
+        }
+        if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'ChangeOwner') {
+            body = beginCell().store(storeChangeOwner(message)).endCell();
         }
         if (message && typeof message === 'object' && !(message instanceof Slice) && message.$$type === 'GetRoyaltyParams') {
             body = beginCell().store(storeGetRoyaltyParams(message)).endCell();
@@ -973,6 +1078,20 @@ export class VoucherCollection implements Contract {
         builder.writeCell(individual_content);
         let source = (await provider.get('get_nft_content', builder.build())).stack;
         let result = source.readCell();
+        return result;
+    }
+    
+    async getTreasury(provider: ContractProvider) {
+        let builder = new TupleBuilder();
+        let source = (await provider.get('treasury', builder.build())).stack;
+        let result = source.readAddress();
+        return result;
+    }
+    
+    async getOwner(provider: ContractProvider) {
+        let builder = new TupleBuilder();
+        let source = (await provider.get('owner', builder.build())).stack;
+        let result = source.readAddress();
         return result;
     }
     

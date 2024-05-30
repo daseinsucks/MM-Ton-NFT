@@ -3,7 +3,7 @@ Contract: Voucher
 BOC Size: 1369 bytes
 
 # Types
-Total Types: 15
+Total Types: 17
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -24,6 +24,14 @@ Signature: `LogEventMintRecord{minter:address,item_id:int257,generate_number:int
 ## MintByOwner
 TLB: `mint_by_owner#d3256b01 mint_to:address = MintByOwner`
 Signature: `MintByOwner{mint_to:address}`
+
+## ChangeTreasury
+TLB: `change_treasury#f28d292a new_treasury:address = ChangeTreasury`
+Signature: `ChangeTreasury{new_treasury:address}`
+
+## ChangeOwner
+TLB: `change_owner#d9ae38fe new_owner:address = ChangeOwner`
+Signature: `ChangeOwner{new_owner:address}`
 
 ## GetRoyaltyParams
 TLB: `get_royalty_params#693d3950 query_id:uint64 = GetRoyaltyParams`
@@ -95,9 +103,12 @@ Total Get Methods: 1
 135: Code of a contract was not found
 136: Invalid address
 137: Masterchain support is not enabled for this contract
+27145: Only owner can change owner
 27499: initialized tx need from collection
+31295: Only owner can change treasury
 37754: Total supply reached
 49280: not owner
 49469: not from collection
+53983: Price requirement is not met
 57579: Only owner can mint
 62742: non-sequential NFTs

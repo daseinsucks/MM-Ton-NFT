@@ -20,6 +20,8 @@ PROGRAM{
   DECLPROC $LogEventMintRecord$_store
   DECLPROC $LogEventMintRecord$_store_cell
   DECLPROC $MintByOwner$_load
+  DECLPROC $ChangeTreasury$_load
+  DECLPROC $ChangeOwner$_load
   DECLPROC $GetRoyaltyParams$_load
   DECLPROC $ReportRoyaltyParams$_store
   DECLPROC $ReportRoyaltyParams$_store_cell
@@ -56,16 +58,23 @@ PROGRAM{
   DECLPROC $VoucherCollection$_fun_get_collection_data
   DECLPROC $VoucherCollection$_fun_get_nft_address_by_index
   DECLPROC $VoucherCollection$_fun_get_nft_content
+  DECLPROC $VoucherCollection$_fun_treasury
+  DECLPROC $VoucherCollection$_fun_owner
   DECLPROC $VoucherCollection$_fun_royalty_params
   DECLPROC $LogEventMintRecord$_constructor_minter_item_id_generate_number
   DECLPROC $SendParameters$_constructor_to_value_mode_bounce_body
   DECLPROC $ReportRoyaltyParams$_constructor_query_id_numerator_denominator_destination
+  DECLPROC $VoucherCollection$_internal_text_247c7bd5f39e2258d80ac36a0419a1ab5779757825a6cc0e915368f00610a18a
   DECLPROC $VoucherCollection$_internal_binary_MintByOwner
+  DECLPROC $VoucherCollection$_internal_binary_ChangeTreasury
+  DECLPROC $VoucherCollection$_internal_binary_ChangeOwner
   DECLPROC $VoucherCollection$_internal_binary_GetRoyaltyParams
   102491 DECLMETHOD %get_collection_data
   92067 DECLMETHOD %get_nft_address_by_index
   81078 DECLMETHOD %getNftItemInit
   68445 DECLMETHOD %get_nft_content
+  106403 DECLMETHOD %treasury
+  83229 DECLMETHOD %owner
   85719 DECLMETHOD %royalty_params
   113617 DECLMETHOD supported_interfaces
   121275 DECLMETHOD get_abi_ipfs
@@ -300,6 +309,22 @@ PROGRAM{
     129 THROWIFNOT
     __tact_load_address INLINECALLDICT
   }>
+  $ChangeTreasury$_load PROCINLINE:<{
+    32 LDU
+    SWAP
+    4069337386 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    __tact_load_address INLINECALLDICT
+  }>
+  $ChangeOwner$_load PROCINLINE:<{
+    32 LDU
+    SWAP
+    3652073726 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    __tact_load_address INLINECALLDICT
+  }>
   $GetRoyaltyParams$_load PROCINLINE:<{
     32 LDU
     SWAP
@@ -384,30 +409,30 @@ PROGRAM{
     3 UNTUPLE
   }>
   $VoucherCollection$_store PROCINLINE:<{
-    s6 s7 XCHG2
+    s7 s8 XCHG2
     32 STU
-    s0 s4 XCHG2
+    s0 s5 XCHG2
     __tact_store_address INLINECALLDICT
     NEWC
-    s3 PUSH
+    s4 PUSH
     ISNULL
     NOT
     IF:<{
       TRUE
       SWAP
       1 STI
-      s0 s3 XCHG
+      s0 s4 XCHG
       $RoyaltyParams$_not_null INLINECALLDICT
-      s3 s5 XCHG
+      s3 s6 XCHG
       $RoyaltyParams$_store INLINECALLDICT
     }>ELSE<{
-      s3 POP
+      s4 POP
       FALSE
-      s0 s3 XCHG2
+      s0 s4 XCHG2
       1 STI
     }>
-    STREF
     s1 s2 XCHG
+    STREF
     STREF
     s0 s2 XCHG
     NEWC
@@ -416,8 +441,10 @@ PROGRAM{
     s1 s3 XCHG
     257 PUSHINT
     STIX
+    s0 s3 XCHG2
+    __tact_store_address INLINECALLDICT
     ENDC
-    SWAP
+    ROT
     STREF
     ENDC
     SWAP
@@ -451,9 +478,10 @@ PROGRAM{
     LDIX
     257 PUSHINT
     LDIX
-    DROP
-    s5 s7 XCHG
-    s5 s6 XCHG
+    __tact_load_address INLINECALLDICT
+    NIP
+    s6 s8 XCHG
+    s6 s7 XCHG
   }>
   $StateInit$_to_external PROCINLINE:<{
   }>
@@ -485,12 +513,13 @@ PROGRAM{
     LDIX
     257 PUSHINT
     LDIX
-    DROP
-    s5 s8 XCHG
-    s5 s7 XCHG
-    s5 s6 XCHG
+    __tact_load_address INLINECALLDICT
+    NIP
+    s6 s9 XCHG
+    s6 s8 XCHG
+    s6 s7 XCHG
+    s4 s5 XCHG
     s3 s4 XCHG
-    s2 s3 XCHG
   }>
   $Voucher$init$_store PROCINLINE:<{
     -ROT
@@ -499,13 +528,13 @@ PROGRAM{
     STIX
   }>
   $VoucherCollection$_contract_init PROCREF:<{
-    s4 s3 XCHG2
+    s5 s4 XCHG2
     0 PUSHINT
-    s0 s3 XCHG
+    s0 s4 XCHG
     $RoyaltyParams$_as_optional INLINECALLDICT
-    s4 s6 s4 XCHG3
-    s1 s5 XCHG
-    s1 s3 XCHG
+    s2 s7 XCHG
+    s6 s1 s5 XCHG3
+    s1 s4 s3 XCHG3
   }>
   $VoucherCollection$_contract_load PROCREF:<{
     c4 PUSH
@@ -517,7 +546,7 @@ PROGRAM{
     SWAP
     IFJMP:<{
       $VoucherCollection$_load INLINECALLDICT
-      1 7 BLKDROP2
+      1 8 BLKDROP2
     }>
     MYADDR
     11 PLDU
@@ -525,9 +554,9 @@ PROGRAM{
     EQUAL
     137 THROWIFNOT
     $VoucherCollection$init$_load INLINECALLDICT
-    s0 s8 XCHG
+    s0 s9 XCHG
     ENDS
-    7 ROLL
+    8 ROLL
     $VoucherCollection$_contract_init INLINECALLDICT
   }>
   $VoucherCollection$_contract_store PROCINLINE:<{
@@ -538,7 +567,7 @@ PROGRAM{
     TRUE
     SWAP
     1 STI
-    7 -ROLL
+    8 -ROLL
     $VoucherCollection$_store INLINECALLDICT
     ENDC
     c4 POP
@@ -712,16 +741,17 @@ PROGRAM{
   }>
   $VoucherCollection$_fun_mint PROCREF:<{
     62742 PUSHINT
-    s9 PUSH
+    s10 PUSH
     -1 GTINT
     THROWANYIFNOT
-    s8 PUSH
-    s0 s7 XCHG
-    s6 s8 XCHG
-    s0 s5 XCHG
-    s4 s8 XCHG
-    s8 s3 s3 XCHG3
-    s0 s9 XCHG
+    s9 PUSH
+    s0 s8 XCHG
+    s7 s9 XCHG
+    s0 s6 XCHG
+    s5 s9 XCHG
+    s0 s4 XCHG
+    s3 s9 XCHG
+    s0 s9 s10 XCHG3
     $VoucherCollection$_fun_getNftItemInit INLINECALLDICT
     2DUP
     $global_contractAddress INLINECALLDICT
@@ -731,33 +761,35 @@ PROGRAM{
     DUP
     $global_emptySlice INLINECALLDICT
     s2 s3 XCHG
-    s2 s15 XCHG
-    s13 PUSH
-    s12 s2 s(-1) PUXC2
+    s2 17 s() XCHG
+    s8 PUSH
+    s13 s2 s(-1) PUXC2
     $Transfer$_constructor_query_id_new_owner_response_destination_custom_payload_forward_amount_forward_payload INLINECALLDICT
     $Transfer$_store_cell INLINECALLDICT
     s2 s6 XCHG
     s5 s13 XCHG
     s1 s4 XCHG
-    s3 s12 XCHG
-    s0 s1 s12 XCHG3
+    s3 s14 XCHG
+    s0 s1 s14 XCHG3
     $SendParameters$_constructor_to_value_bounce_mode_body_code_data INLINECALLDICT
     $global_send INLINECALLDICT
-    s0 s4 XCHG
+    s0 s5 XCHG
     INC
-    s0 s6 XCHG
+    s0 s7 XCHG
+    s4 s6 XCHG
     s3 s5 XCHG
-    s4 s3 s0 XCHG3
+    s4 s0 s3 XCHG3
+    s0 s2 XCHG
   }>
   $CollectionData$_constructor_next_item_index_collection_content_owner_address PROCINLINE:<{
   }>
   $VoucherCollection$_fun_get_collection_data PROCREF:<{
     __tact_string_builder_start_string INLINECALLDICT
-    s3 PUSH
+    s4 PUSH
     $Cell$_fun_asSlice INLINECALLDICT
     __tact_string_builder_append INLINECALLDICT
     __tact_string_builder_end INLINECALLDICT
-    s7 s6 s(-1) PU2XC
+    s8 s7 s(-1) PU2XC
     $CollectionData$_constructor_next_item_index_collection_content_owner_address INLINECALLDICT
   }>
   $VoucherCollection$_fun_get_nft_address_by_index PROCREF:<{
@@ -772,8 +804,14 @@ PROGRAM{
     __tact_string_builder_append INLINECALLDICT
     __tact_string_builder_end INLINECALLDICT
   }>
+  $VoucherCollection$_fun_treasury PROCREF:<{
+    DUP
+  }>
+  $VoucherCollection$_fun_owner PROCREF:<{
+    s6 PUSH
+  }>
   $VoucherCollection$_fun_royalty_params PROCREF:<{
-    s4 PUSH
+    s5 PUSH
     $RoyaltyParams$_not_null INLINECALLDICT
   }>
   $LogEventMintRecord$_constructor_minter_item_id_generate_number PROCINLINE:<{
@@ -786,14 +824,43 @@ PROGRAM{
   }>
   $ReportRoyaltyParams$_constructor_query_id_numerator_denominator_destination PROCINLINE:<{
   }>
+  $VoucherCollection$_internal_text_247c7bd5f39e2258d80ac36a0419a1ab5779757825a6cc0e915368f00610a18a PROCINLINE:<{
+    __tact_context_get INLINECALLDICT
+    s1 s3 XCHG
+    3 BLKDROP
+    53983 PUSHINT
+    OVER
+    1000000000 PUSHINT
+    EQUAL
+    THROWANYIFNOT
+    __tact_my_balance INLINECALLDICT
+    OVER
+    SUB
+    20000000 PUSHINT
+    TUCK
+    MIN
+    SUB
+    20000000 PUSHINT
+    ADD
+    SUB
+    __tact_context_get_sender INLINECALLDICT
+    SWAP
+    $VoucherCollection$_fun_mint INLINECALLDICT
+    __tact_context_get_sender INLINECALLDICT
+    RANDU256
+    s9 s(-1) PUXC
+    $LogEventMintRecord$_constructor_minter_item_id_generate_number INLINECALLDICT
+    $LogEventMintRecord$_store_cell INLINECALLDICT
+    $global_emit INLINECALLDICT
+  }>
   $VoucherCollection$_internal_binary_MintByOwner PROCINLINE:<{
     57579 PUSHINT
     __tact_context_get_sender INLINECALLDICT
-    s8 s(-1) PUXC
+    s9 s(-1) PUXC
     __tact_slice_eq_bits INLINECALLDICT
     THROWANYIFNOT
     37754 PUSHINT
-    s8 s2 PUSH2
+    s9 s3 PUSH2
     LESS
     THROWANYIFNOT
     __tact_context_get INLINECALLDICT
@@ -812,10 +879,26 @@ PROGRAM{
     $VoucherCollection$_fun_mint INLINECALLDICT
     __tact_context_get_sender INLINECALLDICT
     RANDU256
-    s8 s(-1) PUXC
+    s9 s(-1) PUXC
     $LogEventMintRecord$_constructor_minter_item_id_generate_number INLINECALLDICT
     $LogEventMintRecord$_store_cell INLINECALLDICT
     $global_emit INLINECALLDICT
+  }>
+  $VoucherCollection$_internal_binary_ChangeTreasury PROCINLINE:<{
+    NIP
+    31295 PUSHINT
+    __tact_context_get_sender INLINECALLDICT
+    s8 s(-1) PUXC
+    __tact_slice_eq_bits INLINECALLDICT
+    THROWANYIFNOT
+  }>
+  $VoucherCollection$_internal_binary_ChangeOwner PROCINLINE:<{
+    27145 PUSHINT
+    __tact_context_get_sender INLINECALLDICT
+    s1 s9 XCHG
+    __tact_slice_eq_bits INLINECALLDICT
+    s1 s8 XCHG
+    THROWANYIFNOT
   }>
   $VoucherCollection$_internal_binary_GetRoyaltyParams PROCINLINE:<{
     __tact_context_get INLINECALLDICT
@@ -824,13 +907,13 @@ PROGRAM{
     0 PUSHINT
     64 PUSHINT
     FALSE
-    s9 PUSH
-    $RoyaltyParams$_not_null INLINECALLDICT
-    $RoyaltyParams$_get_numerator INLINECALLDICT
     s10 PUSH
     $RoyaltyParams$_not_null INLINECALLDICT
+    $RoyaltyParams$_get_numerator INLINECALLDICT
+    s11 PUSH
+    $RoyaltyParams$_not_null INLINECALLDICT
     $RoyaltyParams$_get_denominator INLINECALLDICT
-    s12 PUSH
+    s13 PUSH
     s3 s7 XCHG
     $ReportRoyaltyParams$_constructor_query_id_numerator_denominator_destination INLINECALLDICT
     $ReportRoyaltyParams$_store_cell INLINECALLDICT
@@ -842,32 +925,42 @@ PROGRAM{
   %get_collection_data PROC:<{
     $VoucherCollection$_contract_load INLINECALLDICT
     $VoucherCollection$_fun_get_collection_data INLINECALLDICT
-    7 3 BLKDROP2
+    8 3 BLKDROP2
     $CollectionData$_to_external INLINECALLDICT
   }>
   %get_nft_address_by_index PROC:<{
     $VoucherCollection$_contract_load INLINECALLDICT
-    7 ROLL
+    8 ROLL
     $VoucherCollection$_fun_get_nft_address_by_index INLINECALLDICT
-    7 1 BLKDROP2
+    8 1 BLKDROP2
   }>
   %getNftItemInit PROC:<{
     $VoucherCollection$_contract_load INLINECALLDICT
-    7 ROLL
+    8 ROLL
     $VoucherCollection$_fun_getNftItemInit INLINECALLDICT
-    7 2 BLKDROP2
+    8 2 BLKDROP2
     $StateInit$_to_external INLINECALLDICT
   }>
   %get_nft_content PROC:<{
     $VoucherCollection$_contract_load INLINECALLDICT
-    2 7 BLKSWAP
+    2 8 BLKSWAP
     $VoucherCollection$_fun_get_nft_content INLINECALLDICT
-    7 1 BLKDROP2
+    8 1 BLKDROP2
+  }>
+  %treasury PROC:<{
+    $VoucherCollection$_contract_load INLINECALLDICT
+    $VoucherCollection$_fun_treasury INLINECALLDICT
+    8 1 BLKDROP2
+  }>
+  %owner PROC:<{
+    $VoucherCollection$_contract_load INLINECALLDICT
+    $VoucherCollection$_fun_owner INLINECALLDICT
+    8 1 BLKDROP2
   }>
   %royalty_params PROC:<{
     $VoucherCollection$_contract_load INLINECALLDICT
     $VoucherCollection$_fun_royalty_params INLINECALLDICT
-    7 3 BLKDROP2
+    8 3 BLKDROP2
     $RoyaltyParams$_to_external INLINECALLDICT
   }>
   supported_interfaces PROC:<{
@@ -878,7 +971,7 @@ PROGRAM{
     209474421377847335869795010607481022628 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d59374167574b645669416d566f4a74616d64735575594e33414c7a6434546a7164777145757a4d5a4177696e} PUSHSLICE
+    x{697066733a2f2f516d5879563172763557384670534151464a4d644676566575394d33704445703754433131686369587644743136} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -887,6 +980,8 @@ PROGRAM{
     SWAP
   }>
   $VoucherCollection$_contract_router_internal PROCREF:<{
+    c2 SAVE
+    SAMEALTSAVE
     SWAP
     IFJMP:<{
       DROP
@@ -911,15 +1006,49 @@ PROGRAM{
       $VoucherCollection$_internal_binary_MintByOwner INLINECALLDICT
       TRUE
     }>
+    DUP
+    4069337386 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      $ChangeTreasury$_load INLINECALLDICT
+      NIP
+      $VoucherCollection$_internal_binary_ChangeTreasury INLINECALLDICT
+      TRUE
+    }>
+    DUP
+    3652073726 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      $ChangeOwner$_load INLINECALLDICT
+      NIP
+      $VoucherCollection$_internal_binary_ChangeOwner INLINECALLDICT
+      TRUE
+    }>
+    DUP
     1765620048 PUSHINT
     EQUAL
     IFJMP:<{
+      DROP
       $GetRoyaltyParams$_load INLINECALLDICT
       NIP
       $VoucherCollection$_internal_binary_GetRoyaltyParams INLINECALLDICT
       TRUE
     }>
-    DROP
+    0 EQINT
+    IF:<{
+      HASHSU
+      16503206267955344479789506433990479957112383025105740036956182953240829141386 PUSHINT
+      EQUAL
+      IFJMP:<{
+        $VoucherCollection$_internal_text_247c7bd5f39e2258d80ac36a0419a1ab5779757825a6cc0e915368f00610a18a INLINECALLDICT
+        TRUE
+        RETALT
+      }>
+    }>ELSE<{
+      DROP
+    }>
     FALSE
   }>
   recv_internal PROC:<{
@@ -941,7 +1070,7 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $VoucherCollection$_contract_load INLINECALLDICT
-    2 7 BLKSWAP
+    2 8 BLKSWAP
     $VoucherCollection$_contract_router_internal INLINECALLDICT
     130 THROWIFNOT
     $VoucherCollection$_contract_store INLINECALLDICT
