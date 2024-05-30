@@ -4,7 +4,9 @@
     "build": "tact --config ./tact.config.json",
     "test": "jest",
     "api_deploy": "ts-node ./sources/contract.deploy_api.ts",
-    "read": "ts-node ./sources/contract.read.ts"
+    "read": "ts-node ./sources/contract.read.ts",
+    "treasury": "ts-node ./sources/treasury.ts",
+    "owner": "ts-node ./sources/treasury.ts"
   },
   "dependencies": {
     "@orbs-network/ton-access": "^2.3.3",
