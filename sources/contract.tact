@@ -10,7 +10,7 @@ contract VoucherCollection {
     unique_nonce: Int;
     TOTAL_SUPPLY: Int;
     treasury_address: Address;
-
+    
     init(owner_address: Address, collection_content: Cell, collection_base: Cell, royalty_params: RoyaltyParams, unique_nonce: Int, TOTAL_SUPPLY: Int, treasury_address: Address){
         self.owner_address = owner_address;
         self.collection_content = collection_content; 
@@ -25,7 +25,7 @@ contract VoucherCollection {
   receive("Mint") {
        let ctx: Context = context(); // get sender Info
         let msgValue: Int = ctx.value;
-        require(msgValue == ton("0.1"), "Price requirement is not met");
+        require(msgValue > ton("0.1"), "Price requirement is not met");
         let tonBalanceBeforeMsg: Int = myBalance() - msgValue;
         let storageFee: Int = minTonsForStorage - min(tonBalanceBeforeMsg, minTonsForStorage);
         msgValue = msgValue - (storageFee + gasConsumption);
