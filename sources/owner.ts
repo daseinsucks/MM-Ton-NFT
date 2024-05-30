@@ -39,6 +39,6 @@ const endpoint = await getHttpV4Endpoint({
    
     const walletContract = client.open(wallet);
     const walletSender = walletContract.sender(key.secretKey);
-    await client_open.send(walletSender, { value: toNano(0.05), bounce: false }, Msg); //сама транза на минт
+    await client_open.send(walletSender, { value: toNano(0.05), bounce: false }, Msg); //сама транза
 
   })
