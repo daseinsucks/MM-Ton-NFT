@@ -1,5 +1,4 @@
 import {
-    Address,
     beginCell,
     contractAddress,
     toNano,
@@ -8,14 +7,12 @@ import {
     fromNano,
     WalletContractV4,
 } from "@ton/ton";
-import { deploy } from "./utils/deploy";
-import { printAddress, printDeploy, printHeader, printSeparator } from "./utils/print";
+
 import { mnemonicToPrivateKey } from "@ton/crypto";
 import * as dotenv from "dotenv";
 dotenv.config();
 // ================================================================= //
 import { VoucherCollection } from "./output/MM-NFT_VoucherCollection";
-import { Voucher } from "./output/MM-NFT_Voucher";
 // ================================================================= //
 
 import { getHttpV4Endpoint } from "@orbs-network/ton-access";
@@ -48,7 +45,7 @@ import { getHttpV4Endpoint } from "@orbs-network/ton-access";
         let wallet = WalletContractV4.create({ workchain, publicKey: keyPair.publicKey });
         let wallet_contract = client4.open(wallet);
         console.log("Wallet address: ", wallet_contract.address);
-        let treasury = Address.parse("UQD7q-FZjYmMA00mBGgM_317OCylWk-5C6NSL4ToEXcKbbev");
+        let treasury = wallet_contract.address;
         // Replace owner with your address
         let owner = wallet.address;
         let uniqueNonce = BigInt(Date.now());
@@ -74,7 +71,6 @@ import { getHttpV4Endpoint } from "@orbs-network/ton-access";
         let balance = await wallet_contract.getBalance();
         // ========================================
         console.log("Current deployment wallet balance: ", fromNano(balance).toString(), "💎TON");
-        printSeparator();
         console.log("Deploying contract to address: ", deployContract.toString());
 
         await wallet_contract.sendTransfer({

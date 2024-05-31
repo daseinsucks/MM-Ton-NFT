@@ -9,7 +9,7 @@ import { VoucherCollection, MintByOwner, ChangeOwner } from "./output/MM-NFT_Vou
 import { getHttpV4Endpoint } from "@orbs-network/ton-access";
 
 
-let new_address = Address.parse("UQD7q-FZjYmMA00mBGgM_317OCylWk-5C6NSL4ToEXcKbbev"); //получаем с кошелька пользователя через tonconnect
+let new_address = Address.parse("UQDSni3H4D2iR7ZNU7nxWNm0vLFAAyw7XRD9eEnbM2CElNwB"); //получаем с кошелька пользователя через tonconnect
 
 
 const Msg: ChangeOwner= {
@@ -26,7 +26,7 @@ const endpoint = await getHttpV4Endpoint({
     });
 
     // Parameters
-    let collection_address = Address.parse("EQDAlAI6ZGe7xTBELbenPM4bnkMyb28bBVCg21TZM7cGKSWA"); //адрес коллекции
+    let collection_address = Address.parse("EQA-1cQojAcAlS70iCz8N2CeFvPHsbIDbwa-ZpS6v0tKYjxT"); //адрес коллекции
 
     let contract_address = await VoucherCollection.fromAddress(collection_address);
     let client_open = client.open(contract_address);

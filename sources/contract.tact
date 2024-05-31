@@ -25,7 +25,7 @@ contract VoucherCollection {
   receive("Mint") {
        let ctx: Context = context(); // get sender Info
         let msgValue: Int = ctx.value;
-        require(msgValue > ton("0.1"), "Price requirement is not met");
+        require(msgValue >= ton("0.1"), "Price requirement is not met");
         let tonBalanceBeforeMsg: Int = myBalance() - msgValue;
         let storageFee: Int = minTonsForStorage - min(tonBalanceBeforeMsg, minTonsForStorage);
         msgValue = msgValue - (storageFee + gasConsumption);

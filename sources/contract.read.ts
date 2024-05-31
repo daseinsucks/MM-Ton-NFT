@@ -1,8 +1,4 @@
-import { beginCell, contractAddress, toNano, Cell, Address, TonClient4, WalletContractV4 } from "@ton/ton";
-import { deploy } from "./utils/deploy";
-import { printAddress, printDeploy, printHeader } from "./utils/print";
-import * as fs from "fs";
-import { getHttpEndpoint } from "@orbs-network/ton-access";
+import { beginCell, toNano, Address, TonClient4, WalletContractV4 } from "@ton/ton";
 import { mnemonicToWalletKey } from "ton-crypto";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -97,3 +93,17 @@ console.log("Insufficient balance of deployer's wallet")
 }
 
 })();
+
+
+
+const body = beginCell()
+  .storeUint(0, 32) // write 32 zero bits to indicate that a text comment will follow
+  .storeStringTail("Mint") // write our text comment
+  .endCell();
+
+  let n = body.toBoc().toString("base64")
+
+  console.log(n)
+
+  n = toNano(0.15).toString()
+console.log(n)
